@@ -18,7 +18,7 @@ public class SquareRenderer implements GLSurfaceView.Renderer {
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
         gl.glTranslatef(0.0f,(float)Math.sin(mTransY), -3.0f);
-        mTransY += 0.075f;
+        mTransY += 0.3f;
         gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
         gl.glEnableClientState(GL10.GL_COLOR_ARRAY);
         mSquare.draw(gl);
@@ -33,9 +33,9 @@ public class SquareRenderer implements GLSurfaceView.Renderer {
     }
 
     public void onSurfaceCreated(GL10 gl, EGLConfig config){
-        gl.glDisable(GL10.GL_DITHER);
+//        gl.glDisable(GL10.GL_DITHER);
         gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_FASTEST);
-        gl.glClearColor(0,0,0,0);
+        gl.glClearColor(115,100,0,50);
         gl.glEnable(GL10.GL_CULL_FACE);
         gl.glShadeModel(GL10.GL_SMOOTH);
         gl.glEnable(GL10.GL_DEPTH_TEST);
