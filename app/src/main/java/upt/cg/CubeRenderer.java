@@ -19,6 +19,8 @@ public class CubeRenderer implements GLSurfaceView.Renderer {
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
 
+        gl.glScalef(1,2,1);
+
         gl.glTranslatef(0.0f, (float) Math.sin(mTransY), -7.0f);
 
         gl.glRotatef(mAngle, 0.0f, 1.0f, 0.0f);
@@ -32,6 +34,8 @@ public class CubeRenderer implements GLSurfaceView.Renderer {
     }
 
     public void onSurfaceCreated(GL10 gl, EGLConfig config){
+        gl.glCullFace(GL10.GL_FRONT);
+
         gl.glDisable(GL10.GL_DITHER);
         gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_FASTEST);
         gl.glClearColor(0,0,0,0);
@@ -47,8 +51,8 @@ public class CubeRenderer implements GLSurfaceView.Renderer {
 
         float fieldOfView = 30.0f/57.3f;
         float aspectRatio = (float)width/(float)height;
-        float zNear = 0.1f;
-        float zFar = 1000;
+        float zNear = 6.0f;
+        float zFar = 1000f;
         float size = zNear * (float)(Math.tan((double)(fieldOfView/2.0f)));
         gl.glFrustumf(-size, size, -size/aspectRatio, size/aspectRatio, zNear, zFar);
         gl.glMatrixMode(GL10.GL_MODELVIEW);
