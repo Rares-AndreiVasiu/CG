@@ -1,5 +1,8 @@
 package upt.cg;
 
+import static upt.cg.CubeRenderer.SS_SUNLIGHT;
+import static upt.cg.CubeRenderer.makeFloatBuffer;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -11,8 +14,20 @@ public class Cube {
     private ByteBuffer mColorBuffer;
     private ByteBuffer mTFan1, mTFan2;
     private FloatBuffer mFVertexBuffer;
+    private FloatBuffer mNormalBuffer;
 
     Cube() {
+        float[] normals =
+                {
+                        -1.0f/(float)Math.sqrt(3), 1.0f/(float)Math.sqrt(3), 1.0f/(float)Math.sqrt(3),
+                        1.0f/(float)Math.sqrt(3), 1.0f/(float)Math.sqrt(3), 1.0f/(float)Math.sqrt(3),
+                        1.0f/(float)Math.sqrt(3), -1.0f/(float)Math.sqrt(3), 1.0f/(float)Math.sqrt(3),
+                        -1.0f/(float)Math.sqrt(3), -1.0f/(float)Math.sqrt(3), 1.0f/(float)Math.sqrt(3),
+                        -1.0f/(float)Math.sqrt(3), 1.0f/(float)Math.sqrt(3), -1.0f/(float)Math.sqrt(3),
+                        1.0f/(float)Math.sqrt(3), 1.0f/(float)Math.sqrt(3), -1.0f/(float)Math.sqrt(3),
+                        1.0f/(float)Math.sqrt(3), -1.0f/(float)Math.sqrt(3), -1.0f/(float)Math.sqrt(3),
+                        -1.0f/(float)Math.sqrt(3), -1.0f/(float)Math.sqrt(3), -1.0f/(float)Math.sqrt(3)
+                };
         float vertices[] =
                 {
                         -1.0f, 1.0f, 1.0f,
@@ -68,6 +83,12 @@ public class Cube {
         mTFan2 = ByteBuffer.allocateDirect(tFan2.length);
         mTFan2.put(tFan2);
         mTFan2.position(0);
+
+        ByteBuffer nbb = ByteBuffer.allocateDirect(normals.length * 4);
+        nbb.order(ByteOrder.nativeOrder());
+        mNormalBuffer = nbb.asFloatBuffer();
+        mNormalBuffer.put(normals);
+        mNormalBuffer.position(0);
     }
 
     public void draw(GL10 gl) {
@@ -75,5 +96,20 @@ public class Cube {
         gl.glColorPointer(4, GL11.GL_UNSIGNED_BYTE, 0, mColorBuffer);
         gl.glDrawElements(gl.GL_TRIANGLE_FAN, 6 * 3, gl.GL_UNSIGNED_BYTE, mTFan1);
         gl.glDrawElements(gl.GL_TRIANGLE_FAN, 6 * 3, gl.GL_UNSIGNED_BYTE, mTFan2);
+
+        gl.glNormalPointer(GL10.GL_FLOAT, 0, mNormalBuffer);
+        gl.glEnableClientState(GL10.GL_NORMAL_ARRAY);
+
+        float[] red = {1.0f, 0.0f, 0.0f, 1.0f};
+
+        gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_DIFFUSE, makeFloatBuffer(red));
+
+        gl.glLightfv(SS_SUNLIGHT,GL10.GL_SPECULAR, makeFloatBuffer(red));
+
+        gl.glMaterialfv(GL10.GL_FRONT_AND_BACK, GL10.GL_SPECULAR, makeFloatBuffer(red));
+
+        float[] position = {10.0f,0.0f,3.0f,1.0f};
+
+        gl.glMaterialf(GL10.GL_FRONT_AND_BACK,GL10.GL_SHININESS, 25);
     }
 }

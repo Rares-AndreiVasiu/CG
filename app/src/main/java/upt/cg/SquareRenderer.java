@@ -2,14 +2,20 @@ package upt.cg;
 
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.egl.EGLConfig;
+
+import android.content.Context;
 import android.opengl.GLSurfaceView;
 import java.lang.Math;
 
+import android.content.Context;
 public class SquareRenderer implements GLSurfaceView.Renderer {
     private Square mSquare;
     private float mTransY;
+    private Context context;
 
-    SquareRenderer(){
+    SquareRenderer(Context context){
+        this.context = context;
+
         mSquare = new Square();
     }
 
@@ -39,5 +45,8 @@ public class SquareRenderer implements GLSurfaceView.Renderer {
         gl.glEnable(GL10.GL_CULL_FACE);
         gl.glShadeModel(GL10.GL_SMOOTH);
         gl.glEnable(GL10.GL_DEPTH_TEST);
+        
+        int resid = R.drawable.image;
+        mSquare.createTexture(gl, this.context, resid);
     }
 }
